@@ -18,7 +18,6 @@ html {
 
 .header > h1 {
     text-align: center;
-    
 }
 
 .board-container {
@@ -30,15 +29,30 @@ html {
     justify-content: center;
 }
 
+li {
+    list-style: none;
+}
+
+.forms-wrapper {
+    display: flex;
+    gap: 2rem;
+    padding-bottom: 1rem;    
+}
+
+label {
+    margin: 0 auto;
+}
+
 .board {
     display: grid;
+    gap: 0.2rem;
     grid-template-columns: repeat(3, 200px);
     grid-template-rows: repeat(3, 200px);
 }
 
 .field-box {
     background-color: antiquewhite;
-    border: 2px solid black;
+    /* border: 2px solid black; */
     display: flex;
     align-items: center;
     justify-content: center;
