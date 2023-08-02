@@ -47,27 +47,55 @@ const gameBoard = (() => {
             console.log("not new game!");
         } else {
         newGame = false;
-        let player1 = cratePlayer(document.querySelector("#player1-name").value, "X");
-        let player2 = cratePlayer(document.querySelector("#player2-name").value, "O");
-        console.log(player1);
         board = resetBoard();
         board.forEach(field => document.querySelector(".board").appendChild(field));
+        
         // call a function to resume from here
-        playGame(player1, player2);
+        let winner = playGame();
+        
         };
     };
 
+    function playGame() {
+        let playerOne = cratePlayer(document.querySelector("#player1-name").value, "X");
+        let playerTwo = cratePlayer(document.querySelector("#player2-name").value, "O");
+        let winner = 0; // for testing
+
+        let playerOneTurn = true;
+        board.forEach(field => field.addEventListener("click", () => {
+            [playerOneTurn, marker] = getPlayerChoice(playerOneTurn); 
+            if (field.innerHTML != "") {
+                playerOneTurn = !playerOneTurn;;
+            } else {
+                field.innerHTML = marker;
+            };
+        }));
+        
+        return winner // for testing
+    }
+
+    function getPlayerChoice(playerOneTurn) {
+        if (playerOneTurn) {
+            playerOneTurn=false;
+            marker="X";
+        } else {
+            playerOneTurn=true;
+            marker="O";
+        }
+        return [playerOneTurn, marker]
+    };
+
+    function checkWinCondition() {
+        //
+        // return
+    };
+
     const cratePlayer = (name, marker) => {
-        console.log(`creating player ${[name, marker]}`)
         return {
             name: name, 
             marker: marker
         };
     };
-
-    function playGame() {
-        console.log("playing")
-    }
     
     // testing
     function getClickedPosition() {
