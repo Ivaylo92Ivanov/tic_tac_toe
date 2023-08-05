@@ -3,20 +3,8 @@ const gameBoard = (() => {
     const columns = 3;
     let positionCounter = 0;
     let board = [];
-    let newGame = true;
 
-// Build the functions that allow players to add
-// marks to a specific spot on the board, and then 
-// tie it to the DOM, letting players click on the 
-// gameboard to place their marker. Don’t forget 
-// the logic that keeps players from playing in spots 
-// that are already taken!
-
-
-// to break up in Modules and factory functions
-// game board should be concerning only the board
-// player creation only the players 
-// game flow - separate module
+    const getBoard = () => board;
 
     function resetBoard() {
         board = clearBoardField();
@@ -41,54 +29,66 @@ const gameBoard = (() => {
         return board;
     }
 
-    function displayBoard(){
-        if (!newGame) {
-            
-            //to add playGame function 
-            //and display board properly
-            console.log("not new game!");
-        } else {
-        newGame = false;
+    function initiateNewGame(){
         board = resetBoard();
         board.forEach(field => document.querySelector(".board").appendChild(field));
-        
-        // call a function to resume from here
-        let winner = playGame();
-        
-        };
+        let playerOne = cratePlayer(document.querySelector("#player1-name").value, "X");
+        let playerTwo = cratePlayer(document.querySelector("#player2-name").value, "O");
+        let playerOneTurn = true;
+        playGame(playerOne, playerTwo, playerOneTurn);
     };
 
     //in game flow
 
-    function playGame() { // tuka da podam obekta koito se wryshta ot gameBoard()
-        let playerOne = cratePlayer(document.querySelector("#player1-name").value, "X");
-        let playerTwo = cratePlayer(document.querySelector("#player2-name").value, "O");
-        let winner = 0; // for testing
-        let playerOneTurn = true;
+    function playGame(player1, player2, playerOneTurn) { 
         board.forEach(field => field.addEventListener("click", () => {
-            [playerOneTurn, marker] = getPlayerChoice(playerOneTurn); 
+            [playerOneTurn, marker] = playRound(playerOneTurn, player1, player2); 
             if (field.innerHTML != "") {
                 playerOneTurn = !playerOneTurn;;
             } else {
                 field.innerHTML = marker;
             };
-        }));
-        
-        return winner // for testing
-    } 
+            checkWinCondition(board);
+        })); 
+    }; 
     
-    function getPlayerChoice(playerOneTurn) {
+    function playRound(playerOneTurn, player1, player2) {
         if (playerOneTurn) {
             playerOneTurn=false;
-            marker="X";
+            marker=player1.marker;
         } else {
             playerOneTurn=true;
-            marker="O";
-        }
+            marker=player2.marker;
+        };
         return [playerOneTurn, marker]
     };
     
-    function checkWinCondition() {
+    function checkWinCondition(board) {
+        let winConditions = [
+            [0, 1, 2],
+            [3, 4, 5],
+            [6, 7, 8],
+            [0, 3, 6],
+            [1, 4, 7],
+            [2, 5, 8],
+            [0, 4, 8],
+            [2, 4, 6]
+        ]
+        
+        for (let condition of winConditions) {
+            [a, b, c] = condition
+            if (board[a].innerHTML === "" ||
+                board[b].innerHTML === "" ||
+                board[c].innerHTML ==="" ) {
+                    // do nothing
+                } else if(board[a].innerHTML === board[b].innerHTML &&
+                board[b].innerHTML === board[c].innerHTML) {
+                    console.log("we have a winner")// pick up from here
+                }
+        }
+
+        
+        
         //
         // return
     };
@@ -102,17 +102,12 @@ const gameBoard = (() => {
         };
     };
 
-    return {board:board, displayBoard};
+    return {getBoard, initiateNewGame};
 })();
-
-
-
-
-
 
 const startGameButton = document.querySelector(".start-game")
 startGameButton.addEventListener("click", () => {
-    gameBoard.displayBoard();
+    gameBoard.initiateNewGame();
 
     // hide the form after clicking the start button
     // show it again on new game
