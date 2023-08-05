@@ -12,9 +12,11 @@ const gameBoard = (() => {
 // the logic that keeps players from playing in spots 
 // that are already taken!
 
-    // for testing purposes
-    // for testing purposes
 
+// to break up in Modules and factory functions
+// game board should be concerning only the board
+// player creation only the players 
+// game flow - separate module
 
     function resetBoard() {
         board = clearBoardField();
@@ -56,11 +58,12 @@ const gameBoard = (() => {
         };
     };
 
-    function playGame() {
+    //in game flow
+
+    function playGame() { // tuka da podam obekta koito se wryshta ot gameBoard()
         let playerOne = cratePlayer(document.querySelector("#player1-name").value, "X");
         let playerTwo = cratePlayer(document.querySelector("#player2-name").value, "O");
         let winner = 0; // for testing
-
         let playerOneTurn = true;
         board.forEach(field => field.addEventListener("click", () => {
             [playerOneTurn, marker] = getPlayerChoice(playerOneTurn); 
@@ -72,8 +75,8 @@ const gameBoard = (() => {
         }));
         
         return winner // for testing
-    }
-
+    } 
+    
     function getPlayerChoice(playerOneTurn) {
         if (playerOneTurn) {
             playerOneTurn=false;
@@ -84,33 +87,22 @@ const gameBoard = (() => {
         }
         return [playerOneTurn, marker]
     };
-
+    
     function checkWinCondition() {
         //
         // return
     };
 
+
+    // player creation
     const cratePlayer = (name, marker) => {
         return {
             name: name, 
             marker: marker
         };
     };
-    
-    // testing
-    function getClickedPosition() {
-        let marker = "";
-        if (player1) {
-            player1=false;
-            marker="X";
-        } else {
-            player1=true;
-            marker="O";
-        }
-        board.forEach(field => field.addEventListener("click", () => console.log(field)));
-    }
 
-    return {board:board, displayBoard, getClickedPosition};
+    return {board:board, displayBoard};
 })();
 
 
@@ -126,4 +118,7 @@ startGameButton.addEventListener("click", () => {
     // show it again on new game
     document.querySelector(".forms-wrapper").style.display = "none";
 });
+
+
+
 
