@@ -14,10 +14,9 @@ const gameBoard = (() => {
             fieldDiv.classList.add("field-box");
             fieldDiv.dataset.position = positionCounter;
             positionCounter++;
-            console.log(fieldDiv);
             board.push(fieldDiv);
             }
-        }
+        };
         positionCounter = 0;
         return board;
     };  
@@ -35,12 +34,12 @@ const gameBoard = (() => {
         let playerOne = cratePlayer(document.querySelector("#player1-name").value, "X");
         let playerTwo = cratePlayer(document.querySelector("#player2-name").value, "O");
         let playerOneTurn = true;
-        playGame(playerOne, playerTwo, playerOneTurn);
+        playGame(playerOneTurn, playerOne, playerTwo);
     };
 
     //in game flow
 
-    function playGame(player1, player2, playerOneTurn) { 
+    function playGame(playerOneTurn, player1, player2) { 
         board.forEach(field => field.addEventListener("click", () => {
             [playerOneTurn, marker] = playRound(playerOneTurn, player1, player2); 
             if (field.innerHTML != "") {
@@ -48,7 +47,7 @@ const gameBoard = (() => {
             } else {
                 field.innerHTML = marker;
             };
-            checkWinCondition(board);
+            checkWinCondition(board, player1, player2);
         })); 
     }; 
     
@@ -63,7 +62,9 @@ const gameBoard = (() => {
         return [playerOneTurn, marker]
     };
     
-    function checkWinCondition(board) {
+    function checkWinCondition(board, player1, player2) {
+        //also check for draw
+        let winnerName;
         let winConditions = [
             [0, 1, 2],
             [3, 4, 5],
@@ -73,26 +74,68 @@ const gameBoard = (() => {
             [2, 5, 8],
             [0, 4, 8],
             [2, 4, 6]
-        ]
+        ];
         
         for (let condition of winConditions) {
-            [a, b, c] = condition
+            [a, b, c] = condition;
             if (board[a].innerHTML === "" ||
                 board[b].innerHTML === "" ||
-                board[c].innerHTML ==="" ) {
+                board[c].innerHTML ==="") {
                     // do nothing
-                } else if(board[a].innerHTML === board[b].innerHTML &&
+            } else if(
+                board[a].innerHTML === board[b].innerHTML &&
                 board[b].innerHTML === board[c].innerHTML) {
-                    console.log("we have a winner")// pick up from here
-                }
-        }
-
-        
-        
-        //
-        // return
+                console.log("we have a winner")
+                if(board[a].innerHTML===player1.marker) {
+                    winnerName=player1.name
+                } else {
+                    winnerName=player2.name
+                };
+                showWiningPath(a, b, c);
+                displayVictory(winnerName);
+            };
+        };
     };
 
+    function askForNewGame() {
+        let winnerDisplay = document.querySelector(".winner-display");
+        winnerDisplay.style.display = "block";
+
+        let rematchButton = document.querySelector(".rematch-button");
+        rematchButton.addEventListener("click", () => {
+            initiateNewGame();
+            winnerDisplay.style.display = "none";
+        });
+
+        let changePlayersButton = document.querySelector(".change-players");
+        changePlayersButton.addEventListener("click", () => {
+            initiateNewGame();
+            winnerDisplay.style.display = "none";
+
+        });
+        // 
+    };
+
+    function displayVictory(winnerName){
+        let announcement = document.querySelector(".winner-display-h1");
+        announcement.innerHTML = `${winnerName} wins this round!`;
+        askForNewGame();        
+    };
+
+    function showWiningPath (index1, index2, index3){
+        let winingPathFields= [
+            document.querySelector(`[data-position="${index1}"]`),
+            document.querySelector(`[data-position="${index2}"]`),
+            document.querySelector(`[data-position="${index3}"]`)
+            ];
+
+        for (let field of winingPathFields) {
+            field.style.backgroundColor = "#fef08a"
+            field.style.transform="scale(1.1)";
+            field.style.transition="0.7s";
+            field.style.border="0.5rem outset black";
+        };  
+    };
 
     // player creation
     const cratePlayer = (name, marker) => {
