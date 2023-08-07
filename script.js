@@ -76,28 +76,32 @@ const gameBoard = (() => {
             [2, 4, 6]
         ];
         
-        for (let condition of winConditions) {
-            [a, b, c] = condition;
-            if (board[a].innerHTML === "" ||
-                board[b].innerHTML === "" ||
-                board[c].innerHTML ==="") {
-                    // do nothing
-            } else if(
-                board[a].innerHTML === board[b].innerHTML &&
-                board[b].innerHTML === board[c].innerHTML) {
-                console.log("we have a winner")
-                if(board[a].innerHTML===player1.marker) {
-                    winnerName=player1.name
-                } else {
-                    winnerName=player2.name
-                };
-                showWiningPath(a, b, c);
-                displayVictory(winnerName);
-            };
-        };
 
-        for (let field of board) {
-            console.log(field.innerHTML)
+        let boardContent = [];
+        board.forEach(field => boardContent.push(field.textContent));
+        // checking if game is draw
+        if (boardContent.includes("")) {
+            for (let condition of winConditions) {
+                [a, b, c] = condition;
+                if (board[a].innerHTML === "" ||
+                    board[b].innerHTML === "" ||
+                    board[c].innerHTML ==="") {
+                        // do nothing
+                } else if(
+                    board[a].innerHTML === board[b].innerHTML &&
+                    board[b].innerHTML === board[c].innerHTML) {
+                    console.log("we have a winner")
+                    if(board[a].innerHTML===player1.marker) {
+                        winnerName=player1.name
+                    } else {
+                        winnerName=player2.name
+                    };
+                    showWiningPath(a, b, c);
+                    displayVictory(winnerName);
+                };
+            };
+        } else {
+            displayVictory("Draw! Nobody ");
         }
     };
 
@@ -116,9 +120,7 @@ const gameBoard = (() => {
             document.querySelector(".forms-wrapper").style.display = "flex";
             initiateNewGame();
             winnerDisplay.style.display = "none";
-
         });
-        // 
     };
 
     function displayVictory(winnerName){
