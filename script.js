@@ -63,7 +63,7 @@ const gameBoard = (() => {
     };
     
     function checkWinCondition(board, player1, player2) {
-        //also check for draw
+        //also check for draw HERE <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
         let winnerName;
         let winConditions = [
             [0, 1, 2],
@@ -95,6 +95,10 @@ const gameBoard = (() => {
                 displayVictory(winnerName);
             };
         };
+
+        for (let field of board) {
+            console.log(field.innerHTML)
+        }
     };
 
     function askForNewGame() {
@@ -109,6 +113,7 @@ const gameBoard = (() => {
 
         let changePlayersButton = document.querySelector(".change-players");
         changePlayersButton.addEventListener("click", () => {
+            document.querySelector(".forms-wrapper").style.display = "flex";
             initiateNewGame();
             winnerDisplay.style.display = "none";
 
