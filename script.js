@@ -1,8 +1,9 @@
-const gameBoard = (() => {
+const game = (() => {
     const rows = 3;
     const columns = 3;
     let positionCounter = 0;
     let board = [];
+    const formWrapper = document.querySelector(".forms-wrapper");
 
     const getBoard = () => board;
 
@@ -29,6 +30,7 @@ const gameBoard = (() => {
     }
 
     function initiateNewGame(){
+        formWrapper.style.display = "none";
         board = resetBoard();
         board.forEach(field => document.querySelector(".board").appendChild(field));
         let playerOne = cratePlayer(document.querySelector("#player1-name").value, "X");
@@ -117,8 +119,8 @@ const gameBoard = (() => {
 
         let changePlayersButton = document.querySelector(".change-players");
         changePlayersButton.addEventListener("click", () => {
-            document.querySelector(".forms-wrapper").style.display = "flex";
-            initiateNewGame();
+            formWrapper.style.display = "flex";
+            resetBoard();            
             winnerDisplay.style.display = "none";
         });
     };
@@ -157,11 +159,7 @@ const gameBoard = (() => {
 
 const startGameButton = document.querySelector(".start-game")
 startGameButton.addEventListener("click", () => {
-    gameBoard.initiateNewGame();
-
-    // hide the form after clicking the start button
-    // show it again on new game
-    document.querySelector(".forms-wrapper").style.display = "none";
+    game.initiateNewGame();
 });
 
 
